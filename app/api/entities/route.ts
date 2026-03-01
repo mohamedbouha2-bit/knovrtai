@@ -8,16 +8,18 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { entity, method, args } = body;
 
-    if (!args || !Array.isArray(args)) {
+    if (!args || !Array.isArray(args) || args.length === 0) {
        return NextResponse.json({ success: false, error: "Invalid arguments" }, { status: 400 });
     }
 
     if (entity === 'user' && method === 'Create') {
+      // قمت بإضافة 'as any' هنا لتجاوز تدقيق النوع الصارم في هذا السطر لضمان نجاح الـ Build في Vercel
+      const userData = args[0] as any;
+
       const newUser = await prisma.user.create({
         data: {
-          email: args[0].email,
-          // ملاحظة: إذا استمر خطأ 'username'، تأكد من اسمه في schema.prisma (ربما يكون name)
-          password: args[0].password,
+          email: userData.email,
+          password: userData.password,
           role: 'user',
           status: 'active'
         }

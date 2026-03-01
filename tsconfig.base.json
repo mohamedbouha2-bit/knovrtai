@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    /* الإعدادات الأساسية التي أرسلتها مع تحديثات التوافق */
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+
+    /* إعدادات Next.js 16 و React 19 الضرورية */
+    "allowJs": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "strict": true, // تفعيل الفحص الصارم لضمان جودة الكود
+    
+    /* تنظيم المسارات البرمجية (Path Aliases) */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
+
+    /* إضافات Next.js */
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,48 @@
+{
+  "name": "aigcode-demo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@gsap/react": "^2.1.2",
+    "@hookform/resolvers": "^3.10.0",
+    "@prisma/client": "^6.19.2",
+    "@radix-ui/react-label": "^2.1.1",
+    "@radix-ui/react-slot": "^1.1.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "crypto-js": "^4.2.0",
+    "groq-sdk": "^0.37.0",
+    "gsap": "^3.14.2",
+    "lucide-react": "^0.575.0",
+    "next": "latest",
+    "next-auth": "^4.24.13",
+    "next-themes": "^0.4.6",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-hook-form": "^7.71.2",
+    "sonner": "^1.7.4",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/crypto-js": "^4.2.2",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "latest",
+    "postcss": "^8.5.6",
+    "prisma": "^6.4.1",
+    "tailwindcss": "^4.0.0",
+    "typescript": "latest"
+  }
+}

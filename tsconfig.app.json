@@ -1,0 +1,58 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    },
+    /* الإعدادات التي أرسلتها مع تحسينات الأداء */
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "noUncheckedSideEffectImports": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app", 
+    "src",
+    "src/types/global.d.ts",
+    "src/types.d.ts",
+    "src/vite-env.d.ts",
+    "src/pages/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "dist",
+    "checkpoint",
+    "pnpm_node_modules",
+    "**/pnpm_node_modules/sub*",
+    "**/pnpm_node_modules/.pnpm",
+    "src/assets/**",
+    "src/tools/**",
+    "src/font/**",
+    "src/ui/**",
+    "src/default/**",
+    "src/@base/**",
+    "src/main.tsx",
+    "src/index.css"
+  ]
+}

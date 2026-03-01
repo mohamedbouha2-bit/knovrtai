@@ -1,0 +1,119 @@
+import { default_entities } from "./entities";
+
+// واجهة الاستجابة الموحدة
+interface EntityResponse<T> {
+    success: boolean;
+    data?: T;
+    error?: string;
+    metadata?: {
+        timestamp: string;
+        processTime: number;
+    };
+}
+
+/**
+ * دالة تحويل البيانات القادمة من JSON إلى أنواع برمجية (Date, BigInt)
+ */
+function deserializeData(data: any): any {
+    if (data === null || data === undefined) return data;
+
+    if (data?.__type === "Date") {
+        return new Date(data.value);
+    }
+    if (data?.__type === "BigInt") {
+        return BigInt(data.value);
+    }
+    if (Array.isArray(data)) {
+        return data.map(deserializeData);
+    }
+    if (typeof data === "object") {
+        return Object.fromEntries(
+            Object.entries(data).map(([k, v]) => [k, deserializeData(v)])
+        );
+    }
+    return data;
+}
+
+/**
+ * دالة تحويل البيانات الخارجة إلى تنسيق JSON آمن مع الحفاظ على الأنواع
+ */
+function serializeData(data: any): any {
+    if (data === null || data === undefined) return data;
+
+    // دعم Prisma Decimal (تحويل المبالغ المالية لرقم)
+    if (typeof data.toNumber === 'function') {
+        return data.toNumber();
+    }
+
+    if (data instanceof Date) {
+        return { __type: "Date", value: data.toISOString() };
+    }
+    if (typeof data === "bigint") {
+        return { __type: "BigInt", value: data.toString() };
+    }
+    if (Array.isArray(data)) {
+        return data.map((item) => serializeData(item));
+    }
+    if (typeof data === "object") {
+        return Object.fromEntries(
+            Object.entries(data).map(([k, v]) => [k, serializeData(v)])
+        );
+    }
+    return data;
+}
+
+/**
+ * المحرك الرئيسي المطور لمعالجة الطلبات
+ */
+export async function handleEntityRequest(
+    entity: string,
+    method: string,
+    args: any[],
+    context?: { userId?: number; role?: string } // إضافة سياق المستخدم للأمان
+): Promise<EntityResponse<any>> {
+    const startTime = Date.now();
+
+    try {
+        // 1. التحقق من وجود الكيان (Entity)
+        const entityMethods = (default_entities as any)[entity];
+        if (!entityMethods) {
+            throw new Error(`الكيان [${entity}] غير موجود في النظام.`);
+        }
+
+        // 2. التحقق من وجود العملية (Method)
+        const handler = entityMethods[method];
+        if (typeof handler !== "function") {
+            throw new Error(`العملية [${method}] غير مدعومة للكيان [${entity}].`);
+        }
+
+        // 3. فك تشفير البيانات القادمة (Arguments)
+        const deserializedArgs = deserializeData(args);
+
+        // 4. تنفيذ العملية (Execution)
+        // ملاحظة: يمكن إضافة فحص صلاحيات هنا بناءً على الـ context
+        const result = await handler(...deserializedArgs);
+
+        // 5. إرجاع النتيجة مشفرة بشكل آمن
+        return {
+            success: true,
+            data: serializeData(result),
+            metadata: {
+                timestamp: new Date().toISOString(),
+                processTime: Date.now() - startTime
+            }
+        };
+
+    } catch (error) {
+        // تسجيل الخطأ داخلياً (Server Logging)
+        console.error(`[Entity Error] ${entity}.${method}:`, error);
+
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : "حدث خطأ غير متوقع في النظام.",
+            metadata: {
+                timestamp: new Date().toISOString(),
+                processTime: Date.now() - startTime
+            }
+        };
+    }
+}

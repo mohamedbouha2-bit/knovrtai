@@ -1,0 +1,60 @@
+# --- السجلات (Logs) ---
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# --- التبعيات والمجلدات المؤقتة (Dependencies) ---
+node_modules
+.pnpm-store
+dist
+dist-ssr
+build
+.next/
+out/
+
+# --- ملفات البيئة الحساسة (Env - Critical) ---
+# لا ترفع هذه الملفات أبداً لأنها تحتوي على مفتاح Gemini وروابط البيانات
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.local
+
+# --- قاعدة البيانات (Database - SQLite) ---
+# نرفع ملف السكيما فقط (schema.prisma)، ولا نرفع البيانات الحقيقية
+prisma/*.db
+prisma/*.db-journal
+/prisma/migrations/
+
+# --- ملفات أدوات المحرر (Editor Files) ---
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+.history
+
+# --- ملفات الاختبار والتغطية (Testing & Coverage) ---
+coverage/
+__snapshots__/
+.vitest-result/
+
+# --- أداة حزم البيانات (Lock files) ---
+# يفضل رفع ملف واحد فقط بناءً على مدير الحزم الذي تستخدمه
+# yarn.lock
+# package-lock.json
+# pnpm-lock.yaml
+
+# --- ملفات النظام (OS Specific) ---
+Thumbs.db
+desktop.ini

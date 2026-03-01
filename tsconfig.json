@@ -1,0 +1,64 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    /* الإعدادات الأساسية وتحسينات الأداء */
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false, /* متوافق مع الكود الحالي */
+    "strictNullChecks": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+
+    /* تنظيم المسارات البرمجية المطور لـ AutoCoder */
+    "paths": {
+      "@/*": ["./src/*"],
+      "@app/*": ["./app/*"],
+      "@ui/*": ["./src/ui/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@lib/*": ["./src/lib/*"],
+      /* دعم مكونات shadcn الموزعة */
+      "@repo/shadcn-ui/lib/utils": ["./src/lib/utils"],
+      "@repo/shadcn-ui/components/ui/*": ["./src/components/ui/*"],
+      "@repo/*": ["./src/components/ui/shadcn-io/*"],
+      "@/server/*": ["./server/*"]
+    },
+
+    /* الإضافات والأنواع */
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "types": [
+      "node",
+      "crypto-js" /* أضفته بناءً على استخدامك في package.json */
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "server/**/*.ts" /* تضمين ملفات السيرفر للفحص البرمجي */
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "dist",
+    "checkpoint",
+    "pnpm_node_modules",
+    "prisma-generated"
+  ]
+}

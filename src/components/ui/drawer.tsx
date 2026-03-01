@@ -1,0 +1,122 @@
+"use client";
+
+import * as React from "react";
+import { Drawer as DrawerPrimitive } from "vaul";
+import { cn } from "@/lib/utils";
+
+/**
+ * المكون الأساسي - يدعم ميزات مثل "السحب للإغلاق"
+ */
+function Drawer({
+  shouldScaleBackground = true,
+  ...props
+}: React.ComponentProps<typeof DrawerPrimitive.Root>) {
+  return (
+    <DrawerPrimitive.Root
+      shouldScaleBackground={shouldScaleBackground}
+      data-slot="drawer"
+      {...props}
+    />
+  );
+}
+
+const DrawerTrigger = DrawerPrimitive.Trigger;
+const DrawerPortal = DrawerPrimitive.Portal;
+const DrawerClose = DrawerPrimitive.Close;
+
+/**
+ * غطاء الخلفية - يضيف لمسة من التعتيم
+ */
+function DrawerOverlay({
+  className,
+  ...props
+}: React.ComponentProps<typeof DrawerPrimitive.Overlay>) {
+  return (
+    <DrawerPrimitive.Overlay
+      data-slot="drawer-overlay"
+      className={cn("fixed inset-0 z-50 bg-black/60 backdrop-blur-[2px]", className)}
+      {...props}
+    />
+  );
+}
+
+/**
+ * محتوى الدرج - يدعم جميع الاتجاهات (Top, Bottom, Left, Right)
+ */
+function DrawerContent({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<typeof DrawerPrimitive.Content>) {
+  return (
+    <DrawerPortal>
+      <DrawerOverlay />
+      <DrawerPrimitive.Content
+        data-slot="drawer-content"
+        className={cn(
+          "group/drawer-content fixed z-50 flex h-auto flex-col border bg-white dark:bg-slate-950 dark:border-slate-800",
+          // اتجاه الأسفل (الافتراضي للجوال)
+          "data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:mt-24 data-[vaul-drawer-direction=bottom]:rounded-t-2xl",
+          // اتجاه الأعلى
+          "data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:top-0 data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:rounded-b-2xl",
+          // اتجاه اليمين واليسار (يشبه الـ Sidebar)
+          "data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:w-3/4 data-[vaul-drawer-direction=right]:sm:max-w-sm",
+          "data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:w-3/4 data-[vaul-drawer-direction=left]:sm:max-w-sm",
+          className
+        )}
+        {...props}
+      >
+        {/* مقبض السحب البصري */}
+        <div className="mx-auto mt-4 h-1.5 w-12 shrink-0 rounded-full bg-slate-200 dark:bg-slate-800 group-data-[vaul-drawer-direction=bottom]/drawer-content:block hidden" />
+        {children}
+      </DrawerPrimitive.Content>
+    </DrawerPortal>
+  );
+}
+
+function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="drawer-header"
+      className={cn("grid gap-1.5 p-4 text-center sm:text-left rtl:sm:text-right", className)}
+      {...props}
+    />
+  );
+}
+
+function DrawerFooter({ className, ...props }: React.ComponentProps<"div">) {
+  return <div data-slot="drawer-footer" className={cn("mt-auto flex flex-col gap-2 p-4", className)} {...props} />;
+}
+
+function DrawerTitle({ className, ...props }: React.ComponentProps<typeof DrawerPrimitive.Title>) {
+  return (
+    <DrawerPrimitive.Title
+      data-slot="drawer-title"
+      className={cn("text-lg font-bold leading-none tracking-tight", className)}
+      {...props}
+    />
+  );
+}
+
+function DrawerDescription({ className, ...props }: React.ComponentProps<typeof DrawerPrimitive.Description>) {
+  return (
+    <DrawerPrimitive.Description
+      data-slot="drawer-description"
+      className={cn("text-sm text-slate-500 dark:text-slate-400", className)}
+      {...props}
+    />
+  );
+}
+
+export {
+  Drawer,
+  DrawerPortal,
+  DrawerOverlay,
+  DrawerTrigger,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerFooter,
+  DrawerTitle,
+  DrawerDescription,
+};

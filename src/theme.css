@@ -1,0 +1,108 @@
+@theme {
+  /* --- Typography System (Converted to REM for accessibility) --- */
+  --font-size-display: 3.75rem; /* 60px */
+  --font-size-h1: 3rem;        /* 48px */
+  --font-size-h2: 2.25rem;     /* 36px */
+  --font-size-h3: 1.875rem;    /* 30px */
+  --font-size-h4: 1.5rem;      /* 24px */
+  --font-size-base: 1.125rem;  /* 18px */
+  --font-size-sm-body: 1rem;   /* 16px */
+  --font-size-caption: 0.875rem; /* 14px */
+
+  --font-weight-bold: 700;
+  --font-weight-semibold: 600;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.3;
+  --line-height-relaxed: 1.4;
+  --line-height-loose: 1.6;
+
+  --letter-spacing-tight: -0.01em;
+  --letter-spacing-normal: -0.005em;
+  --letter-spacing-wide: 0.01em;
+
+  /* --- Global Colors (OKLCH System) --- */
+  --color-white: oklch(1 0 0);
+  --color-black: oklch(0 0 0);
+
+  /* --- Semantic Colors: Light Mode (Default) --- */
+  --color-background: oklch(1 0 0);
+  --color-foreground: oklch(0.208 0.042 265.755);
+
+  --color-card: oklch(0.984 0.003 247.858);
+  --color-card-foreground: oklch(0.208 0.042 265.755);
+
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.208 0.042 265.755);
+
+  --color-primary: oklch(0.546 0.245 262.88);
+  --color-primary-foreground: oklch(1 0 0);
+
+  --color-secondary: oklch(0.967 0.003 264.542);
+  --color-secondary-foreground: oklch(0.208 0.042 265.755);
+
+  --color-muted: oklch(0.967 0.003 264.542);
+  --color-muted-foreground: oklch(0.551 0.027 264.364);
+
+  --color-accent: oklch(0.627 0.265 303.9);
+  --color-accent-foreground: oklch(1 0 0);
+
+  --color-destructive: oklch(0.637 0.237 25.331);
+  --color-destructive-foreground: oklch(1 0 0);
+
+  --color-success: oklch(0.696 0.17 162.48);
+  --color-success-foreground: oklch(1 0 0);
+
+  --color-warning: oklch(0.769 0.188 70.08);
+  --color-warning-foreground: oklch(1 0 0);
+
+  --color-border: oklch(0.929 0.013 255.508);
+  --color-input: oklch(0.929 0.013 255.508);
+  --color-ring: oklch(0.546 0.245 262.88);
+
+  /* --- Sidebar Tokens --- */
+  --color-sidebar-background: oklch(0.984 0.003 247.858);
+  --color-sidebar-foreground: oklch(0.551 0.027 264.364);
+  --color-sidebar-primary: oklch(0.488 0.243 264.376);
+  --color-sidebar-primary-foreground: oklch(1 0 0);
+  --color-sidebar-accent: oklch(0.967 0.003 264.542);
+  --color-sidebar-accent-foreground: oklch(0.208 0.042 265.755);
+  --color-sidebar-border: oklch(0.929 0.013 255.508);
+  --color-sidebar-ring: oklch(0.546 0.245 262.88);
+}
+
+/* --- Dark Mode Overrides --- */
+/* يتم تفعيل هذه القيم تلقائياً عند وجود كلاس .dark في عنصر الـ html */
+.dark {
+  --color-background: oklch(0.145 0.021 255.226); /* Deep blue-black */
+  --color-foreground: oklch(0.985 0.002 247.833);
+
+  --color-card: oklch(0.188 0.023 261.241);
+  --color-card-foreground: oklch(0.985 0.002 247.833);
+
+  --color-popover: oklch(0.145 0.021 255.226);
+  --color-popover-foreground: oklch(0.985 0.002 247.833);
+
+  --color-primary: oklch(0.707 0.165 254.624); /* Brighter primary for dark mode */
+  --color-primary-foreground: oklch(0.145 0.021 255.226);
+
+  --color-secondary: oklch(0.269 0.018 262.711);
+  --color-secondary-foreground: oklch(0.985 0.002 247.833);
+
+  --color-muted: oklch(0.269 0.018 262.711);
+  --color-muted-foreground: oklch(0.708 0.015 256.782);
+
+  --color-accent: oklch(0.707 0.165 254.624);
+  --color-accent-foreground: oklch(0.145 0.021 255.226);
+
+  --color-border: oklch(0.269 0.018 262.711);
+  --color-input: oklch(0.269 0.018 262.711);
+  
+  /* Sidebar Dark Mode */
+  --color-sidebar-background: oklch(0.188 0.023 261.241);
+  --color-sidebar-foreground: oklch(0.708 0.015 256.782);
+  --color-sidebar-primary: oklch(0.707 0.165 254.624);
+  --color-sidebar-border: oklch(0.269 0.018 262.711);
+}

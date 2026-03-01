@@ -1,0 +1,52 @@
+@import "tailwindcss";
+@import "./theme.css";
+
+@layer base {
+  html, body { height: 100%; }
+  body { 
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    @apply antialiased selection:bg-primary/30; /* تحسين مظهر تحديد النص */
+  }
+
+  /* تحسين التسلسل الهرمي للنصوص */
+  h1 { @apply text-h1; }
+  h2 { @apply text-h2; }
+  h3 { @apply text-h3; }
+  p { @apply text-base text-muted-foreground; }
+}
+
+@layer utilities {
+  /* 1. نظام الألوان (Utilities) */
+  .bg-primary { background-color: var(--color-primary); }
+  .text-primary { color: var(--color-primary); }
+  .text-primary-foreground { color: var(--color-primary-foreground); }
+  
+  /* ... (باقي الألوان الدلالية كما هي في كودك) ... */
+
+  /* 2. تحسين ToggleGroup و Radix UI */
+  [data-radix-collection-item] {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .data-\[state\=on\]\:bg-primary[data-state="on"] { 
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+    border: 2px solid var(--color-primary);
+    @apply shadow-md scale-[1.02]; /* إضافة تأثير حركة بسيط عند التفعيل */
+  }
+
+  /* 3. نظام الظلال الذكي باستخدام color-mix */
+  .shadow-soft {
+    box-shadow: 0 10px 15px -3px color-mix(in srgb, var(--color-foreground) 8%, transparent);
+  }
+
+  /* 4. الطباعة الاحترافية (Typography) */
+  .text-display {
+    font-family: var(--font-header);
+    font-size: var(--font-size-display);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-tight);
+    @apply leading-none;
+  }
+}

@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  // تحديد مكان توليد الكلاينت ليتوافق مع بنية مشروعك (خارج src)
+  output   = "../prisma-generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  // يتم سحب الرابط من ملف .env الذي قمنا بإعداده
+  url      = env("DATABASE_URL")
+}
+
+// نموذج المستخدم (User Model) لتخزين البيانات المختبرة
+model User {
+  id         String   @id @default(cuid())
+  name       String?
+  email      String   @unique
+  // حقل إضافي لتخزين الرد الذي سيولده Gemini
+  aiResponse String?  @db.Text 
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("users") // تسمية الجدول في قاعدة البيانات
+}
+
+// يمكنك إضافة نماذج أخرى هنا مستقبلاً مثل (Post أو Entity)

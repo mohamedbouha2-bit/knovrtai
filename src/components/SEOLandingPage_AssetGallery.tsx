@@ -14,7 +14,7 @@ import { PlayCircle, Image as ImageIcon, ExternalLink, RefreshCw } from 'lucide-
 import { gsap } from 'gsap';
 
 // ----------------------------------------------------------------------
-// Component: AssetCard (تم تحسين الأداء باستخدام React.memo)
+// Component: AssetCard (تحسين الأداء باستخدام React.memo)
 // ----------------------------------------------------------------------
 
 const AssetCard = React.memo(({ asset, onClick }: { asset: public_showcase_asset; onClick: () => void }) => {
@@ -103,7 +103,7 @@ export default function SEOLandingPage_AssetGallery() {
     return activeTab === 'all' ? assets : assets.filter(a => a.asset_type === activeTab);
   }, [assets, activeTab]);
 
-  // GSAP Animation with Cleanup (Context)
+  // GSAP Animation
   useEffect(() => {
     if (!isLoading && gridRef.current) {
       const ctx = gsap.context(() => {
@@ -120,9 +120,66 @@ export default function SEOLandingPage_AssetGallery() {
         );
       }, gridRef);
 
-      return () => ctx.revert(); // تنظيف الحركة لمنع الـ Memory Leaks
+      return () => ctx.revert();
     }
   }, [isLoading, activeTab]);
 
-  const handleAssetClick = () => {
+  // إصلاح الدالة التي كانت مكسورة
+  const handleAssetClick = (id: string) => {
     const session = getfrontend_user_session();
+    if (!session) {
+      toast.info('Please sign in to view full assets');
+      router.push('/login');
+      return;
+    }
+    router.push(`/assets/${id}`);
+  };
+
+  return (
+    <section className="py-16 bg-slate-50">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+          <div className="space-y-2">
+            <h2 className="text-3xl font-bold text-slate-900">Creative Asset Gallery</h2>
+            <p className="text-slate-500">Explore our curated collection of high-quality media.</p>
+          </div>
+          
+          <div className="flex bg-white p-1 rounded-lg shadow-sm border">
+            {(['all', 'image', 'video'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
+                  activeTab === tab 
+                    ? 'bg-slate-900 text-white shadow-md' 
+                    : 'text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="flex h-64 items-center justify-center">
+            <RefreshCw className="h-8 w-8 animate-spin text-slate-400" />
+          </div>
+        ) : (
+          <div 
+            ref={gridRef}
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          >
+            {filteredAssets.map((asset) => (
+              <AssetCard 
+                key={asset.id} 
+                asset={asset} 
+                onClick={() => handleAssetClick(asset.id)} 
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}

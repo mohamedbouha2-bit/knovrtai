@@ -3,7 +3,7 @@
 import React, { useLayoutEffect, useRef, useMemo } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { BrainCircuit, Globe2, Wallet2, Zap, ShieldCheck, Rocket, CheckCircle2, Bot, Layers, Sparkles } from 'lucide-react';
+import { BrainCircuit, Globe2, Wallet2, Zap, ShieldCheck, Rocket, Sparkles } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { cn } from '@/lib/utils';
@@ -23,7 +23,6 @@ const SEOLandingPage_FeatureHighlights = () => {
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
 
-  // استخدام useMemo للحفاظ على ثبات البيانات ومنع الرندر غير الضروري
   const features = useMemo<FeatureItem[]>(() => [
     {
       id: 'ai-routing',
@@ -73,11 +72,9 @@ const SEOLandingPage_FeatureHighlights = () => {
   ], []);
 
   useLayoutEffect(() => {
-    // تسجيل الإضافة داخل الـ Effect لضمان العمل في المتصفح فقط
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      // 1. تحريك الهيدر
       gsap.from(headerRef.current, {
         opacity: 0,
         y: 30,
@@ -89,7 +86,6 @@ const SEOLandingPage_FeatureHighlights = () => {
         }
       });
 
-      // 2. تحريك الكروت بتأثير Stagger
       if (cardsRef.current) {
         gsap.from(cardsRef.current.children, {
           opacity: 0,
@@ -106,7 +102,7 @@ const SEOLandingPage_FeatureHighlights = () => {
       }
     }, containerRef);
 
-    return () => ctx.revert(); // تنظيف الحركات عند إغلاق المكون
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -132,7 +128,38 @@ const SEOLandingPage_FeatureHighlights = () => {
           </p>
         </div>
 
-        {/* Features Grid */}
+        {/* Features Grid - تم إصلاح الإغلاق هنا */}
         <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {features.map((feature) => (
-            <Card
+            <Card key={feature.id} className="group hover:shadow-xl transition-all duration-300 border-slate-200 overflow-hidden">
+              <CardHeader className="pb-4">
+                <div className={cn("w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-transform group-hover:scale-110", feature.colorClass)}>
+                  {feature.icon}
+                </div>
+                <div className="flex items-center justify-between mb-2">
+                  <CardTitle className="text-xl font-bold text-slate-800">{feature.title}</CardTitle>
+                  {feature.badge && (
+                    <Badge variant="secondary" className="text-[10px] font-bold uppercase tracking-wider">
+                      {feature.badge}
+                    </Badge>
+                  )}
+                </div>
+                <CardDescription className="text-slate-500 leading-relaxed">
+                  {feature.description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
+                  <div className={cn("h-full w-0 group-hover:w-full transition-all duration-700 ease-in-out", feature.colorClass.replace('bg-', 'bg-').split(' ')[0])} 
+                       style={{backgroundColor: 'currentColor'}} />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default SEOLandingPage_FeatureHighlights;

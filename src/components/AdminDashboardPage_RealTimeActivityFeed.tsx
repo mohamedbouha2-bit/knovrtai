@@ -54,12 +54,11 @@ export default function AdminDashboardPage_RealTimeActivityFeed() {
   const router = useRouter();
   const [activities, setActivities] = useState<system_activity_log[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false); // حالة خاصة للتحديث اليدوي
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedLog, setSelectedLog] = useState<system_activity_log | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); // إضافة حالة البحث
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // دالة جلب البيانات
   const fetchActivities = async (silent = false) => {
     try {
       if (!silent) setIsLoading(true);
@@ -84,11 +83,10 @@ export default function AdminDashboardPage_RealTimeActivityFeed() {
 
   useEffect(() => {
     fetchActivities();
-    const interval = setInterval(() => fetchActivities(true), 30000); // تحديث صامت كل 30 ثانية
+    const interval = setInterval(() => fetchActivities(true), 30000);
     return () => clearInterval(interval);
   }, []);
 
-  // تصفية البيانات بناءً على البحث
   const filteredActivities = useMemo(() => {
     return activities.filter(item => 
       item.user_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -178,4 +176,105 @@ export default function AdminDashboardPage_RealTimeActivityFeed() {
                   {isLoading ? (
                     Array.from({ length: 5 }).map((_, i) => (
                       <TableRow key={i}>
-                        <TableCell className="pl-6"><Skeleton className="h-6
+                        <TableCell className="pl-6"><Skeleton className="h-6 w-24" /></TableCell>
+                        <TableCell><Skeleton className="h-6 w-32" /></TableCell>
+                        <TableCell><Skeleton className="h-6 w-40" /></TableCell>
+                        <TableCell><Skeleton className="h-6 w-full" /></TableCell>
+                        <TableCell className="pr-6"><Skeleton className="h-6 w-20 ml-auto" /></TableCell>
+                      </TableRow>
+                    ))
+                  ) : filteredActivities.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
+                        No recent activities found.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    filteredActivities.map((log) => (
+                      <TableRow 
+                        key={log.id} 
+                        className="cursor-pointer hover:bg-slate-50 transition-colors"
+                        onClick={() => handleRowClick(log)}
+                      >
+                        <TableCell className="pl-6">
+                          <Badge variant="outline" className={cn("gap-1.5 font-medium px-2.5 py-0.5", STATUS_CONFIG[log.status].badge)}>
+                            {STATUS_CONFIG[log.status].icon}
+                            {log.status.toUpperCase()}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2 font-medium text-slate-700">
+                            {ACTION_CONFIG[log.action_type]?.icon}
+                            {ACTION_CONFIG[log.action_type]?.label}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-8 w-8 border border-slate-200">
+                              <AvatarImage src={log.user_avatar || ''} />
+                              <AvatarFallback className="bg-slate-100 text-slate-500 text-xs">
+                                {log.user_name?.substring(0, 2).toUpperCase() || '??'}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium text-slate-900">{log.user_name}</span>
+                              <span className="text-xs text-slate-500">{log.user_email}</span>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <p className="text-sm text-slate-600 line-clamp-1">{log.description}</p>
+                        </TableCell>
+                        <TableCell className="text-right pr-6">
+                          <time className="text-sm text-slate-500">
+                            {formatDistanceToNow(new Date(log.created_at || Date.now()), { addSuffix: true })}
+                          </time>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Details Sheet */}
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+          <SheetContent className="sm:max-w-md md:max-w-lg">
+            <SheetHeader className="mb-6">
+              <SheetTitle>Activity Details</SheetTitle>
+              <SheetDescription>
+                Full transaction logs and metadata for this event.
+              </SheetDescription>
+            </SheetHeader>
+            {selectedLog && (
+              <div className="space-y-6">
+                 {/* Metadata Grid */}
+                 <div className="grid grid-cols-2 gap-4">
+                    <div className="p-3 rounded-lg border bg-slate-50 space-y-1">
+                      <span className="text-[10px] uppercase font-bold text-slate-400">Request ID</span>
+                      <p className="text-xs font-mono text-slate-700 break-all">{selectedLog.id}</p>
+                    </div>
+                    <div className="p-3 rounded-lg border bg-slate-50 space-y-1">
+                      <span className="text-[10px] uppercase font-bold text-slate-400">Timestamp</span>
+                      <p className="text-xs text-slate-700">
+                        {format(new Date(selectedLog.created_at || Date.now()), 'PPP p')}
+                      </p>
+                    </div>
+                 </div>
+                 <div className="space-y-3">
+                    <h4 className="text-sm font-semibold text-slate-900">Technical Payload</h4>
+                    {renderDetails(selectedLog.metadata)}
+                 </div>
+              </div>
+            )}
+            <SheetFooter className="mt-8 border-t pt-4">
+              <Button variant="outline" className="w-full" onClick={() => setIsSheetOpen(false)}>Close Inspector</Button>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </section>
+  );
+}

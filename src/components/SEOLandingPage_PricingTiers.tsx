@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Check, Loader2, Sparkles, X, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,9 +11,11 @@ import { toast } from 'sonner';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { entities } from '@/tools/entities-proxy';
-import { getfrontend_user_session, type FrontendUserSession } from '@/tools/SessionContext';
+import { getfrontend_user_session } from '@/tools/SessionContext';
+// السطر الذي كان ناقصاً ويسبب الأخطاء الحمراء:
+import { cn } from "@/lib/utils"; 
 
-// --- الثوابت الافتراضية خارج المكون لتحسين الأداء ---
+// --- الثوابت الافتراضية ---
 const DEFAULT_TIERS: PricingTier[] = [
   {
     id: 'lite',
@@ -68,7 +70,6 @@ const SEOLandingPage_PricingTiers = () => {
   const [plans, setPlans] = useState<PricingTier[]>(DEFAULT_TIERS);
   const [processingId, setProcessingId] = useState<string | null>(null);
 
-  // جلب البيانات من قاعدة البيانات
   useEffect(() => {
     const fetchPlans = async () => {
       try {
@@ -97,7 +98,6 @@ const SEOLandingPage_PricingTiers = () => {
     fetchPlans();
   }, []);
 
-  // أنيميشن الظهور
   const containerRef = React.useRef(null);
   useGSAP(() => {
     if (loading) return;
@@ -109,16 +109,11 @@ const SEOLandingPage_PricingTiers = () => {
 
   const handleChoosePlan = async (plan: PricingTier) => {
     setProcessingId(plan.id);
-    const session = getfrontend_user_session();
-
-    // نمط التحقق قبل التوجيه
     const query = new URLSearchParams({
       planId: plan.id,
       billing: isAnnual ? 'annual' : 'monthly',
       price: calculatePrice(plan.price).toString()
     });
-
-    // التوجيه الموحد لصفحة التسجيل/الدفع
     router.push(`/frontendregisterpage?${query.toString()}`);
   };
 
@@ -134,7 +129,6 @@ const SEOLandingPage_PricingTiers = () => {
 
   return (
     <section ref={containerRef} className="w-full bg-slate-50 py-24 relative overflow-hidden">
-      {/* عناصر خلفية جمالية */}
       <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white to-transparent" />
       
       <div className="container mx-auto px-6 relative z-10">
@@ -144,7 +138,6 @@ const SEOLandingPage_PricingTiers = () => {
             Ready to scale your <span className="text-blue-600">AI workflow?</span>
           </h2>
           
-          {/* محول الدفع الشهري/السنوي */}
           <div className="flex items-center justify-center gap-4 pt-6">
             <span className={cn("text-sm font-bold transition-colors", !isAnnual ? "text-slate-900" : "text-slate-400")}>Monthly</span>
             <Switch checked={isAnnual} onCheckedChange={setIsAnnual} className="data-[state=checked]:bg-blue-600" />
@@ -213,7 +206,6 @@ const SEOLandingPage_PricingTiers = () => {
           ))}
         </div>
 
-        {/* تذييل الأمان */}
         <div className="mt-20 flex flex-col items-center gap-4 opacity-60">
           <div className="flex gap-6 grayscale contrast-125">
              <span className="text-xs font-bold uppercase tracking-widest">Stripe Secure</span>
@@ -228,3 +220,6 @@ const SEOLandingPage_PricingTiers = () => {
     </section>
   );
 };
+
+// هذا السطر هو الأهم لضمان نجاح الـ Build في Vercel
+export default SEOLandingPage_PricingTiers;

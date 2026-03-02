@@ -1,33 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 1. تجاوز أخطاء TypeScript للسماح بإتمام البناء وتفعيل الـ SSL فوراً
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-
-  // 2. تجاهل ESLint أثناء البناء (تم تصحيح الهيكلية لتناسب الإصدارات الحديثة)
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-
-  // 3. تفعيل الوضع الصارم لتحسين أداء التطبيق
+  // تفعيل الوضع الصارم
   reactStrictMode: true,
 
-  // 4. الحل الجوهري لمشكلة Prisma مع Turbopack 
-  // هذا يمنع خطأ "Prisma Client did not initialize yet" في سجلات Vercel
+  // تجاوز أخطاء TypeScript و ESLint لضمان إتمام البناء
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
+
+  // الحل الجوهري: إجبار Turbopack على معالجة Prisma كحزمة خارجية
+  // هذا يمنع خطأ "@prisma/client did not initialize yet"
   serverExternalPackages: ['@prisma/client', '.prisma'],
 
-  // 5. تحسينات الصور لتقليل استهلاك موارد البناء
-  images: {
-    unoptimized: true,
-  },
+  // تحسين معالجة الصور
+  images: { unoptimized: true },
 
-  // إعدادات إضافية لضمان استقرار Turbopack مع الإصدار 16
-  experimental: {
-    turbo: {
-      // يمكنك إضافة إعدادات مخصصة هنا إذا لزم الأمر مستقبلاً
-    },
-  },
+  // لاحظ حذف مفتاح 'turbo' و 'experimental' غير المتوافقين حالياً
 };
 
 export default nextConfig;
